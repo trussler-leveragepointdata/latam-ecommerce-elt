@@ -27,41 +27,29 @@ def get_public_holidays(public_holidays_url: str, year: str) -> DataFrame:
     url = f"{public_holidays_url}/{year}/BR"
 
     max_attempts = 5
-
     base_delay = 1
-
     max_delay = 30
 
     for attempt in range(max_attempts):
-
         try:
-
             response = requests.get(url, timeout=10)
-
             response.raise_for_status()
-
             break
-
         except requests.exceptions.Timeout:
-
             if attempt == max_attempts - 1:
-
                 raise SystemExit("Request timed out after multiple attempts")
 
             # Exponential backoff capped at max_delay
-
             delay = min(base_delay * (2 ** attempt), max_delay)
 
             print(f"Request timed out. Retrying in {delay} seconds...")
 
             time.sleep(delay)
 
-        except requests.exceptions.RequestException as exc:
-
+        except requests.exceptions.HTTPError as exc:
             raise SystemExit(f"Failed to retrieve public holidays: {exc}")
 
-    holidays = DataFrame(response.json())
-
+    holidays = read_json(response.text)
     holidays = holidays.drop(columns=["types", "counties"])
     holidays["date"] = to_datetime(holidays["date"])
 

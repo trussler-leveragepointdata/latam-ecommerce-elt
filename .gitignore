@@ -1,0 +1,20 @@
+._.gitignore
+.*.git
+.*.pytest_cache
+._ASSIGNMENT.md
+._AnyoneAI - Sprint Project 01.ipynb
+._README.md
+._assignment.zip
+._dataset
+._images
+._olist.db
+._output.json
+._queries
+._requirements.txt
+._src
+._testenv
+._tests
+olist.db
+output.json
+src/__pycache__/._plots.cpython-39.pyc
+src/__pycache__/plots.cpython-39.pyc
