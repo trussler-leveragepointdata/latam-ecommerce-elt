@@ -33,8 +33,8 @@
 -- 2. order_status == 'delivered' AND order_delivered_customer_date IS NOT NULL
 -- 3. Take distinct order_id.
 SELECT
-    STRFTIME('%m', order_delivered_customer_date) AS month_no,
-    CASE STRFTIME("%m", order_delivered_customer_date)
+    STRFTIME('%m', order_purchase_timestamp) AS month_no,
+    CASE STRFTIME("%m", order_purchase_timestamp)
         WHEN '01' THEN 'Jan'
         WHEN '02' THEN 'Feb'
         WHEN '03' THEN 'Mar'
@@ -48,16 +48,17 @@ SELECT
         WHEN '11' THEN 'Nov'
         WHEN '12' THEN 'Dec'
     END AS month,
-    IFNULL(AVG(CASE WHEN STRFTIME("%Y", order_delivered_customer_date) = "2016" THEN julianday(order_delivered_customer_date) - julianday(do.order_approved_at) END), "NaN") AS Year2016_real_time,
-    IFNULL(AVG(CASE WHEN STRFTIME("%Y", order_delivered_customer_date) = "2017" THEN julianday(order_delivered_customer_date) - julianday(do.order_approved_at) END), "NaN") AS Year2017_real_time,
-    IFNULL(AVG(CASE WHEN STRFTIME("%Y", order_delivered_customer_date) = "2018" THEN julianday(order_delivered_customer_date) - julianday(do.order_approved_at) END), "NaN") AS Year2018_real_time,
-    IFNULL(AVG(CASE WHEN STRFTIME("%Y", order_delivered_customer_date) = "2016" THEN julianday(order_estimated_delivery_date) - julianday(do.order_approved_at) END), "NaN") AS Year2016_estimated_time,
-    IFNULL(AVG(CASE WHEN STRFTIME("%Y", order_delivered_customer_date) = "2017" THEN julianday(order_estimated_delivery_date) - julianday(do.order_approved_at) END), "NaN") AS Year2017_estimated_time,
-    IFNULL(AVG(CASE WHEN STRFTIME("%Y", order_delivered_customer_date) = "2018" THEN julianday(order_estimated_delivery_date) - julianday(do.order_approved_at) END), "NaN") AS Year2018_estimated_time
+    AVG(CASE WHEN STRFTIME("%Y", order_purchase_timestamp) = "2016" THEN julianday(order_delivered_customer_date) - julianday(order_purchase_timestamp) END) AS Year2016_real_time,
+    AVG(CASE WHEN STRFTIME("%Y", order_purchase_timestamp) = "2017" THEN julianday(order_delivered_customer_date) - julianday(order_purchase_timestamp) END) AS Year2017_real_time,
+    AVG(CASE WHEN STRFTIME("%Y", order_purchase_timestamp) = "2018" THEN julianday(order_delivered_customer_date) - julianday(order_purchase_timestamp) END) AS Year2018_real_time,
+    AVG(CASE WHEN STRFTIME("%Y", order_purchase_timestamp) = "2016" THEN julianday(order_estimated_delivery_date) - julianday(order_purchase_timestamp) END) AS Year2016_estimated_time,
+    AVG(CASE WHEN STRFTIME("%Y", order_purchase_timestamp) = "2017" THEN julianday(order_estimated_delivery_date) - julianday(order_purchase_timestamp) END) AS Year2017_estimated_time,
+    AVG(CASE WHEN STRFTIME("%Y", order_purchase_timestamp) = "2018" THEN julianday(order_estimated_delivery_date) - julianday(order_purchase_timestamp) END) AS Year2018_estimated_time
 FROM (
 	SELECT DISTINCT
         order_id,
         order_status,
+        order_purchase_timestamp,
         order_approved_at,
         order_delivered_customer_date,
         order_estimated_delivery_date

@@ -10,7 +10,7 @@
 -- All orders should have a delivered status and the Category and actual delivery date should be not null.
 -- For simplicity, if there are orders with multiple product categories, consider the full order's payment_value in the summation of revenue of each category 
 SELECT
-    op2.product_category_name AS Category,
+    translation.product_category_name_english AS Category,
     COUNT(DISTINCT oo.order_id) AS Num_order,
     SUM(op.payment_value) AS Revenue
 FROM olist_order_payments op
@@ -20,10 +20,12 @@ JOIN olist_orders oo
 	ON oo.order_id = ooi.order_id
 JOIN olist_products op2  
 	ON op2.product_id   = ooi.product_id  
+JOIN product_category_name_translation translation
+    ON translation.product_category_name = op2.product_category_name
 WHERE
     oo.order_status = 'delivered' 
 AND
     oo.order_delivered_customer_date IS NOT NULL
-GROUP BY op2.product_category_name 
+GROUP BY translation.product_category_name_english
 ORDER BY Revenue ASC
-LIMIT 10
+LIMIT 10;

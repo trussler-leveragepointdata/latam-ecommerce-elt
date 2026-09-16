@@ -188,9 +188,7 @@ def query_freight_value_weight_relationship(database: Engine) -> QueryResult:
     aggregations = delivered.groupby("order_id").agg({
         "freight_value": "sum",
         "product_weight_g": "sum"
-    })
-
-    print(aggregations.head())
+    }).reset_index()
 
     # Keep the code below as it is, this will return the result from
     # `aggregations` variable with the corresponding name and format.
@@ -217,6 +215,7 @@ def query_orders_per_day_and_holidays_2017(database: Engine) -> QueryResult:
 
     # Reading the public holidays from public_holidays table
     holidays = read_sql("SELECT * FROM public_holidays", database)
+    holidays["date"] = pd.to_datetime(holidays["date"]).dt.date
 
     # Reading the orders from olist_orders table
     orders = read_sql("SELECT * FROM olist_orders", database)

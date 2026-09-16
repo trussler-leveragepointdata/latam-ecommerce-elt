@@ -4,11 +4,10 @@
 -- and the second one the total amount of each.
 SELECT 
 	order_status,
-	SUM(payment_value) AS Amount
+	COUNT(*) AS Amount
 FROM 
-	olist_order_payments
-JOIN 
 	olist_orders
-USING (order_id)
 GROUP BY
 	order_status
+ORDER BY
+	order_status ASC;
