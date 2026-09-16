@@ -1,4 +1,5 @@
 ._.gitignore
+._*
 .*.git
 .*.pytest_cache
 ._ASSIGNMENT.md
