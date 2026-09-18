@@ -1,4 +1,4 @@
-# Sprint project 01
+# LATAM Ecommerce
 > E-Commerce Data Pipeline
 
 Hi! this is the first of several projects we're going to be working on during this course.
